@@ -1090,12 +1090,18 @@ function renderQuestion() {
    MATH RENDERING
 ========================================= */
 
+/* =========================================
+   MATH RENDERING
+========================================= */
+
 function renderMath() {
 
-    /*
-       If MathJax is added later,
-       this function can call MathJax.typeset().
-    */
+    if (window.MathJax &&
+        window.MathJax.typesetPromise) {
+
+        MathJax.typesetPromise();
+
+    }
 
 }
 
