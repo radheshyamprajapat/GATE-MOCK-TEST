@@ -1,28 +1,19 @@
 window.MOCK = {
-  "title": "Mechanics Test 1",
-  "subject": "Mechanics",
-  "questions": [
+  title: "Classical Mechanics Mock Test 1",
+  subject: "Classical Mechanics",
+  duration: 20,
+  questions: [
     {
-      "q": "In a central force field, which quantity is conserved?",
-      "o": [
-        "Linear momentum only",
-        "Angular momentum",
-        "Position",
-        "Speed always"
+      q: "If a Lagrangian $L$ does not explicitly depend on time $t$, which quantity is conserved?",
+      o: [
+        "Linear Momentum",
+        "Angular Momentum",
+        "Total Energy (Hamiltonian)",
+        "Action"
       ],
-      "a": 1,
-      "m": 1
-    },
-    {
-      "q": "The dimensions of angular momentum are:",
-      "o": [
-        "MLT",
-        "ML²T⁻¹",
-        "ML²T⁻²",
-        "M²LT⁻¹"
-      ],
-      "a": 1,
-      "m": 1
+      a: 2,
+      m: 2,
+      negative: 0.66
     }
   ]
 };
