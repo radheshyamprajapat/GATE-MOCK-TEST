@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Result</title><link rel="stylesheet" href="../style.css"></head><body>
+<main class="result"><div class="card"><span class="badge">Test Result</span><h1 id="title">Result</h1><div class="cards">
+<div class="card"><h3 id="score"></h3><p class="muted">Score</p></div><div class="card"><h3 id="correct"></h3><p class="muted">Correct</p></div><div class="card"><h3 id="wrong"></h3><p class="muted">Wrong</p></div><div class="card"><h3 id="skip"></h3><p class="muted">Skipped</p></div>
+</div><a class="btn" href="index.html">Back to Mock Tests</a></div></main>
+<script>const r=JSON.parse(localStorage.getItem('gateLastResult')||'{}');document.getElementById('title').textContent=r.title||'Result';document.getElementById('score').textContent=(r.score??0).toFixed(2);document.getElementById('correct').textContent=r.correct??0;document.getElementById('wrong').textContent=r.wrong??0;document.getElementById('skip').textContent=r.skip??0;</script>
+</body></html>

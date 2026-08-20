@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Subject Mocks</title><link rel="stylesheet" href="../style.css"></head><body>
+<header class="nav"><div class="container navin"><div class="logo">GATE Physics 2027</div><nav class="navlinks"><a href="index.html">Mock Tests</a></nav></div></header>
+<main class="container" style="padding:45px 20px"><a href="index.html">← All Subjects</a><h1 id="title">Tests</h1><div id="tests" class="list"></div></main>
+<script src="../tests.js"></script><script>
+const id=new URLSearchParams(location.search).get('subject'); const s=TEST_CATALOG.subjects.find(x=>x.id===id);
+if(!s){document.getElementById('title').textContent='Subject not found'}else{
+document.getElementById('title').textContent=s.icon+' '+s.name+' — Mock Tests';
+document.getElementById('tests').innerHTML=s.tests.length?s.tests.map((t,i)=>`<a class="card" href="mock-test.html?test=${t.id}"><h3>${t.name}</h3><p class="muted">Test ${i+1} • Click to start</p><span class="pill">Start Test →</span></a>`).join(''):'<div class="card"><h3>Coming soon</h3><p class="muted">Add a question file and one test entry in tests.js to activate this subject.</p></div>';
+}
+</script></body></html>

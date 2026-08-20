@@ -1,1 +1,7 @@
-
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mock Tests</title><link rel="stylesheet" href="../style.css"></head><body>
+<header class="nav"><div class="container navin"><div class="logo">GATE Physics 2027</div><nav class="navlinks"><a href="../index.html">Home</a><a href="index.html">Mock Tests</a></nav></div></header>
+<main class="container" style="padding:45px 20px"><span class="badge">Mock Test Centre</span><h1>Choose a Subject</h1><p class="lead">Select a subject to see all available tests.</p><div id="subjects" class="cards"></div></main>
+<script src="../tests.js"></script><script>
+const box=document.getElementById('subjects');
+TEST_CATALOG.subjects.forEach(s=>box.innerHTML+=`<a class="card" href="subject.html?subject=${s.id}"><div class="icon">${s.icon}</div><h3>${s.name}</h3><p class="muted">${s.tests.length} test(s) available</p><span class="pill">Open Tests →</span></a>`);
+</script></body></html>
