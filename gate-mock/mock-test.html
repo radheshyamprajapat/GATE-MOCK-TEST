@@ -6,7 +6,6 @@
   <title>GATE Official CBT Examination Interface</title>
   <link rel="stylesheet" href="exam.css">
   
-  <!-- Safe MathJax Configuration (No Polyfills) -->
   <script>
     window.MathJax = {
       tex: {
@@ -15,10 +14,14 @@
       },
       options: {
         skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        pageReady: () => {
+          return MathJax.startup.defaultPageReady();
+        }
       }
     };
   </script>
 
-  <!-- Clean Cloudflare CDN for MathJax v3 -->
-  <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+  <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.js"></script>
 </head>
