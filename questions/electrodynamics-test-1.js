@@ -1,28 +1,19 @@
 window.MOCK = {
-  "title": "Electrodynamics Test 1",
-  "subject": "Electrodynamics",
-  "questions": [
+  title: "Electrodynamics Mock Test 1",
+  subject: "Electrodynamics",
+  duration: 20,
+  questions: [
     {
-      "q": "Gauss's law relates electric flux to:",
-      "o": [
-        "Potential",
-        "Enclosed charge",
-        "Magnetic field",
-        "Current only"
+      q: "According to Maxwell's equations, what is $\\nabla \\cdot \\mathbf{B}$?",
+      o: [
+        "$\\rho / \\epsilon_0$",
+        "$0$",
+        "$-\\frac{\\partial \\mathbf{B}}{\\partial t}$",
+        "$\\mu_0 \\mathbf{J}$"
       ],
-      "a": 1,
-      "m": 1
-    },
-    {
-      "q": "The divergence of a curl is always:",
-      "o": [
-        "1",
-        "-1",
-        "0",
-        "∞"
-      ],
-      "a": 2,
-      "m": 1
+      a: 1,
+      m: 1,
+      negative: 0.33
     }
   ]
 };
