@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GATE Online CBT Test</title>
+  <title>GATE Official CBT Examination Interface</title>
   <link rel="stylesheet" href="exam.css">
   
-  <!-- MathJax Configuration for LaTeX rendering -->
   <script>
     window.MathJax = {
       tex: {
@@ -20,36 +19,74 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
-<body>
+<body class="cbt-body">
 
-  <header class="exam-header">
-    <div class="exam-title" id="test-title">GATE Physics Mock Exam</div>
-    <div class="exam-timer" id="timer-display">--:--</div>
-    <button class="palette-btn" style="width:auto; padding: 0.5rem 1rem; background: var(--danger); color: white; border: none;" onclick="if(confirm('Submit test now?')) submitTest();">Submit Exam</button>
+  <!-- Top Header Banner -->
+  <header class="cbt-header">
+    <div class="cbt-exam-name" id="test-title">GATE Physics (PH) Official Mock Exam</div>
+    <div class="cbt-timer-box">Time Left: <span id="timer-display">--:--</span></div>
   </header>
 
-  <main class="exam-container">
-    <section class="question-panel">
-      <div>
-        <div class="question-meta">
-          <span id="q-number">Question 1</span>
-          <span id="q-marks">Marks: +1 | -0.25</span>
-        </div>
-        <div class="question-text" id="q-text">Loading question text...</div>
-        <div class="options-list" id="options-container"></div>
+  <!-- Main CBT Grid Container -->
+  <main class="cbt-container">
+    
+    <!-- Left Column: Question Area -->
+    <section class="cbt-left">
+      <div class="cbt-q-header">
+        <span id="q-number" class="cbt-q-num">Question No. 1</span>
+        <span id="q-marks" class="cbt-q-marks">Marks: +1 | -0.33</span>
       </div>
 
-      <div class="exam-actions">
-        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="prevQuestion()">Previous</button>
-        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem; background: var(--primary); color: white;" onclick="nextQuestion()">Next</button>
-        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="clearResponse()">Clear Response</button>
+      <div class="cbt-q-body">
+        <div class="cbt-q-text" id="q-text">Loading question...</div>
+        <div class="cbt-options" id="options-container"></div>
       </div>
+
+      <!-- Bottom Toolbar Controls -->
+      <footer class="cbt-footer">
+        <div class="cbt-footer-left">
+          <button class="cbt-btn btn-purple" onclick="markForReview()">Mark for Review & Next</button>
+          <button class="cbt-btn btn-default" onclick="clearResponse()">Clear Response</button>
+        </div>
+        <div class="cbt-footer-right">
+          <button class="cbt-btn btn-default" onclick="prevQuestion()">Previous</button>
+          <button class="cbt-btn btn-green" onclick="saveAndNext()">Save & Next</button>
+        </div>
+      </footer>
     </section>
 
-    <aside class="palette-panel">
-      <h3>Question Palette</h3>
+    <!-- Right Column: Candidate Info & Palette -->
+    <aside class="cbt-right">
+      <!-- Candidate Profile Box -->
+      <div class="candidate-box">
+        <div class="candidate-img">👤</div>
+        <div class="candidate-info">
+          <span class="candidate-label">Candidate Name:</span>
+          <span class="candidate-name">Radheshyam</span>
+          <span class="candidate-label">Subject:</span>
+          <span class="candidate-sub">Physics (PH)</span>
+        </div>
+      </div>
+
+      <!-- Official Status Legends -->
+      <div class="palette-legend">
+        <div class="legend-item"><span class="badge not-visited" id="count-not-visited">0</span> Not Visited</div>
+        <div class="legend-item"><span class="badge not-answered" id="count-not-answered">0</span> Not Answered</div>
+        <div class="legend-item"><span class="badge answered" id="count-answered">0</span> Answered</div>
+        <div class="legend-item"><span class="badge marked" id="count-marked">0</span> Marked for Review</div>
+        <div class="legend-item"><span class="badge ans-marked" id="count-ans-marked">0</span> Answered & Marked for Review</div>
+      </div>
+
+      <!-- Question Palette Title & Grid -->
+      <div class="palette-header">Choose a Question</div>
       <div class="palette-grid" id="palette-grid"></div>
+
+      <!-- Submit Section -->
+      <div class="cbt-submit-area">
+        <button class="cbt-btn btn-submit" onclick="if(confirm('Are you sure you want to submit the exam?')) submitTest();">Submit Test</button>
+      </div>
     </aside>
+
   </main>
 
   <script src="../tests.js"></script>
