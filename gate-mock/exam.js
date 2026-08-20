@@ -1,4 +1,4 @@
-/* CBT EXAM ENGINE */
+/* CBT EXAM ENGINE WITH MATHJAX RE-RENDER */
 let currentQuestionIndex = 0;
 let userAnswers = {};
 let timerInterval = null;
@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Find Test Info
   let testEntry = null;
   window.TEST_CATALOG.subjects.forEach((s) => {
     s.tests.forEach((t) => {
@@ -28,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Load question script dynamically
   const script = document.createElement("script");
   script.src = "../" + testEntry.file;
   script.onload = () => {
@@ -47,15 +45,9 @@ function initExam() {
   }
 
   document.getElementById("test-title").textContent = window.MOCK.title;
-  
-  // Timer setup
   totalTimeSeconds = (window.MOCK.duration || 30) * 60;
   startTimer();
-
-  // Render Palette
   renderPalette();
-
-  // Render First Question
   loadQuestion(0);
 }
 
@@ -100,9 +92,9 @@ function loadQuestion(index) {
 
   updatePaletteHighlights();
 
-  // Trigger MathJax re-render
-  if (window.MathJax) {
-    MathJax.typesetPromise();
+  // Re-render LaTeX formatting dynamically
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById("q-text"), optionsContainer]).catch((err) => console.log(err));
   }
 }
 
@@ -176,10 +168,9 @@ function submitTest() {
     }
   });
 
-  const totalQuestions = window.MOCK.questions.length;
+  const maxPossibleMarks = window.MOCK.questions.reduce((acc, curr) => acc + (curr.m || 1), 0);
   const attempted = correct + wrong;
   const accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : 0;
-  const maxPossibleMarks = window.MOCK.questions.reduce((acc, curr) => acc + (curr.m || 1), 0);
   const percentage = ((score / maxPossibleMarks) * 100).toFixed(1);
 
   const resultData = {
