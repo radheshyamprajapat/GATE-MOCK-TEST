@@ -1,28 +1,31 @@
 window.MOCK = {
-  "title": "Quantum Test 2",
-  "subject": "Quantum",
-  "questions": [
+  title: "Quantum Mechanics Mock Test 2",
+  subject: "Quantum Mechanics",
+  duration: 30,
+  questions: [
     {
-      "q": "A normalized wavefunction must satisfy:",
-      "o": [
-        "∫ψ dx=0",
-        "∫|ψ|²dx=1",
-        "∫ψ²dx=0",
-        "∫|ψ|dx=∞"
+      q: "What are the eigenvalues of the spin angular momentum operator $S_z$ for a spin-1/2 particle?",
+      o: [
+        "$\\pm 1$",
+        "$\\pm \\hbar$",
+        "$\\pm \\frac{1}{2}\\hbar$",
+        "0"
       ],
-      "a": 1,
-      "m": 1
+      a: 2,
+      m: 1,
+      negative: 0.33
     },
     {
-      "q": "For a harmonic oscillator, the energy levels are:",
-      "o": [
-        "nℏω",
-        "(n+1/2)ℏω",
-        "n²ℏω",
-        "(n+1)²ℏω"
+      q: "The ground state energy of a 1D simple harmonic oscillator is given by:",
+      o: [
+        "$\\hbar \\omega$",
+        "$\\frac{1}{2}\\hbar \\omega$",
+        "$\\frac{3}{2}\\hbar \\omega$",
+        "0"
       ],
-      "a": 1,
-      "m": 1
+      a: 1,
+      m: 2,
+      negative: 0.66
     }
   ]
 };
