@@ -1,55 +1,198 @@
+/* CBT EXAM ENGINE */
+let currentQuestionIndex = 0;
+let userAnswers = {};
+let timerInterval = null;
+let totalTimeSeconds = 0;
 
-const params=new URLSearchParams(location.search);
-const testId=params.get("test");
-let catalog=window.TEST_CATALOG;
-let selectedTest=null, subjectName="";
-for(const s of catalog.subjects){
-  const t=s.tests.find(x=>x.id===testId);
-  if(t){selectedTest=t; subjectName=s.name; break;}
-}
-if(!selectedTest){document.body.innerHTML="<main style='padding:40px;font-family:Arial'><h2>Test not found</h2><a href='index.html'>Back</a></main>";throw new Error("Test not found");}
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const testId = urlParams.get("test");
 
-const script=document.createElement("script");
-script.src="../"+selectedTest.file;
-script.onload=()=>startExam(window.MOCK);
-document.head.appendChild(script);
+  if (!testId || !window.TEST_CATALOG) {
+    alert("Invalid test context.");
+    window.location.href = "index.html";
+    return;
+  }
 
-let questions=[], current=0, answers=[], timeLeft=60*30, timer;
-function startExam(data){
-  questions=data.questions; answers=Array(questions.length).fill(null);
-  document.getElementById("testTitle").textContent=selectedTest.name;
-  document.getElementById("subjectName").textContent=subjectName;
-  renderPalette(); renderQuestion(); timer=setInterval(tick,1000);
+  // Find Test Info
+  let testEntry = null;
+  window.TEST_CATALOG.subjects.forEach((s) => {
+    s.tests.forEach((t) => {
+      if (t.id === testId) testEntry = t;
+    });
+  });
+
+  if (!testEntry) {
+    alert("Test requested does not exist.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  // Load question script dynamically
+  const script = document.createElement("script");
+  script.src = "../" + testEntry.file;
+  script.onload = () => {
+    initExam();
+  };
+  script.onerror = () => {
+    alert("Failed to load test questions data file.");
+  };
+  document.head.appendChild(script);
+});
+
+function initExam() {
+  if (!window.MOCK || !window.MOCK.questions) {
+    alert("Corrupted question structure.");
+    return;
+  }
+
+  document.getElementById("test-title").textContent = window.MOCK.title;
+  
+  // Timer setup
+  totalTimeSeconds = (window.MOCK.duration || 30) * 60;
+  startTimer();
+
+  // Render Palette
+  renderPalette();
+
+  // Render First Question
+  loadQuestion(0);
 }
-function tick(){
-  timeLeft--; const m=Math.floor(timeLeft/60),s=timeLeft%60;
-  document.getElementById("timer").textContent=`${m}:${String(s).padStart(2,"0")}`;
-  if(timeLeft<=0){clearInterval(timer);finish();}
+
+function startTimer() {
+  const timerDisplay = document.getElementById("timer-display");
+  timerInterval = setInterval(() => {
+    totalTimeSeconds--;
+    const m = Math.floor(totalTimeSeconds / 60);
+    const s = totalTimeSeconds % 60;
+    timerDisplay.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+    if (totalTimeSeconds <= 0) {
+      clearInterval(timerInterval);
+      alert("Time is up! Submitting test automatically.");
+      submitTest();
+    }
+  }, 1000);
 }
-function renderPalette(){
-  const p=document.getElementById("palette");
-  p.innerHTML=questions.map((q,i)=>`<button class="num ${i===current?'active ':''}${answers[i]!==null?'answered':''}" onclick="go(${i})">${i+1}</button>`).join("");
+
+function loadQuestion(index) {
+  currentQuestionIndex = index;
+  const qData = window.MOCK.questions[index];
+
+  document.getElementById("q-number").textContent = `Question ${index + 1} of ${window.MOCK.questions.length}`;
+  document.getElementById("q-marks").textContent = `Marks: +${qData.m || 1} | -${qData.negative || 0.25}`;
+  document.getElementById("q-text").innerHTML = qData.q;
+
+  const optionsContainer = document.getElementById("options-container");
+  optionsContainer.innerHTML = "";
+
+  qData.o.forEach((optText, oIdx) => {
+    const item = document.createElement("div");
+    item.className = `option-item ${userAnswers[index] === oIdx ? 'selected' : ''}`;
+    item.onclick = () => selectOption(oIdx);
+
+    item.innerHTML = `
+      <input type="radio" name="opt" ${userAnswers[index] === oIdx ? 'checked' : ''}>
+      <span><strong>${String.fromCharCode(65 + oIdx)}.</strong> ${optText}</span>
+    `;
+    optionsContainer.appendChild(item);
+  });
+
+  updatePaletteHighlights();
+
+  // Trigger MathJax re-render
+  if (window.MathJax) {
+    MathJax.typesetPromise();
+  }
 }
-function renderQuestion(){
- const q=questions[current];
- document.getElementById("qno").textContent=`Question ${current+1} of ${questions.length}`;
- document.getElementById("qtext").innerHTML=q.q;
- document.getElementById("options").innerHTML=q.o.map((o,i)=>`<label class="option"><input type="radio" name="ans" value="${i}" ${answers[current]===i?'checked':''} onchange="choose(${i})"> ${o}</label>`).join("");
- renderPalette();
- if(window.MathJax) MathJax.typesetPromise();
+
+function selectOption(optIndex) {
+  userAnswers[currentQuestionIndex] = optIndex;
+  loadQuestion(currentQuestionIndex);
 }
-function choose(i){answers[current]=i;renderPalette();}
-function go(i){current=i;renderQuestion();}
-function next(){if(current<questions.length-1){current++;renderQuestion();}}
-function prev(){if(current>0){current--;renderQuestion();}}
-function finish(){
- clearInterval(timer);
- let correct=0,wrong=0,skip=0,score=0;
- questions.forEach((q,i)=>{
-   if(answers[i]===null)skip++;
-   else if(answers[i]===q.a){correct++;score+=q.m||1;}
-   else {wrong++;score-=q.negative??0.25;}
- });
- localStorage.setItem("gateLastResult",JSON.stringify({score,correct,wrong,skip,total:questions.length,title:selectedTest.name}));
- location.href="result.html";
+
+function clearResponse() {
+  delete userAnswers[currentQuestionIndex];
+  loadQuestion(currentQuestionIndex);
+}
+
+function nextQuestion() {
+  if (currentQuestionIndex < window.MOCK.questions.length - 1) {
+    loadQuestion(currentQuestionIndex + 1);
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestionIndex > 0) {
+    loadQuestion(currentQuestionIndex - 1);
+  }
+}
+
+function renderPalette() {
+  const grid = document.getElementById("palette-grid");
+  grid.innerHTML = "";
+  window.MOCK.questions.forEach((_, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn unanswered";
+    btn.id = `palette-btn-${idx}`;
+    btn.textContent = idx + 1;
+    btn.onclick = () => loadQuestion(idx);
+    grid.appendChild(btn);
+  });
+}
+
+function updatePaletteHighlights() {
+  window.MOCK.questions.forEach((_, idx) => {
+    const btn = document.getElementById(`palette-btn-${idx}`);
+    btn.className = "palette-btn";
+    if (userAnswers.hasOwnProperty(idx)) {
+      btn.classList.add("answered");
+    } else {
+      btn.classList.add("unanswered");
+    }
+    if (idx === currentQuestionIndex) {
+      btn.classList.add("current");
+    }
+  });
+}
+
+function submitTest() {
+  clearInterval(timerInterval);
+
+  let score = 0;
+  let correct = 0;
+  let wrong = 0;
+  let skipped = 0;
+
+  window.MOCK.questions.forEach((q, idx) => {
+    if (!userAnswers.hasOwnProperty(idx)) {
+      skipped++;
+    } else if (userAnswers[idx] === q.a) {
+      correct++;
+      score += (q.m || 1);
+    } else {
+      wrong++;
+      score -= (q.negative || 0.25);
+    }
+  });
+
+  const totalQuestions = window.MOCK.questions.length;
+  const attempted = correct + wrong;
+  const accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : 0;
+  const maxPossibleMarks = window.MOCK.questions.reduce((acc, curr) => acc + (curr.m || 1), 0);
+  const percentage = ((score / maxPossibleMarks) * 100).toFixed(1);
+
+  const resultData = {
+    testTitle: window.MOCK.title,
+    score: score.toFixed(2),
+    maxMarks: maxPossibleMarks,
+    correct,
+    wrong,
+    skipped,
+    accuracy,
+    percentage
+  };
+
+  sessionStorage.setItem("MOCK_RESULT", JSON.stringify(resultData));
+  window.location.href = "result.html";
 }
