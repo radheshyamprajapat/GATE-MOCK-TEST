@@ -1,9 +1,154 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GATE Physics 2027</title><link rel="stylesheet" href="style.css"></head><body>
-<header class="nav"><div class="container navin"><div class="logo">GATE Physics 2027</div><nav class="navlinks"><a href="index.html">Home</a><a href="gate-mock/index.html">Mock Tests</a><a href="pyq.html">PYQs</a><a href="resources.html">Resources</a><a href="about.html">About</a></nav></div></header>
-<section class="hero"><div class="container"><span class="badge">Physics • GATE 2027</span><h1>Practice smarter.<br>Prepare with confidence.</h1><p class="lead">A clean mock-test platform for GATE Physics with subject-wise tests, instant results, negative marking and a simple question system.</p><p><a class="btn" href="gate-mock/index.html">Explore Mock Tests</a></p></div></section>
-<main class="container"><div class="cards">
-<div class="card"><div class="icon">📝</div><h3>Subject-wise Mocks</h3><p class="muted">Quantum, Mechanics, Electrodynamics and more.</p></div>
-<div class="card"><div class="icon">⏱️</div><h3>Real Test Engine</h3><p class="muted">Timer, question palette, navigation and result calculation.</p></div>
-<div class="card"><div class="icon">📊</div><h3>Instant Result</h3><p class="muted">See correct, wrong, skipped and final score immediately.</p></div>
-</div></main><footer><div class="container">GATE Physics 2027 • Practice platform</div></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GATE Physics 2027 - Complete Preparation Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">⚛️ GATE <span>Physics '27</span></a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="gate-mock/index.html">Mock Tests</a></li>
+        <li><a href="pyq.html">PYQs</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-content">
+        <span class="badge badge-primary">GATE PHYSICS 2027</span>
+        <h1>Prepare Smarter. Practice Better. Crack GATE Physics.</h1>
+        <p>Master standard GATE physics concepts with instant evaluations, subject-wise mock tests, and real exam interface experience.</p>
+        <div class="hero-actions">
+          <a href="gate-mock/index.html" class="btn btn-primary">Start Mock Tests →</a>
+          <a href="pyq.html" class="btn btn-secondary">Explore PYQs</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">$$\hat{H}\Psi = E\Psi$$</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Precision Practice Engine for Physics Aspirants</p>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">1000+</div>
+        <div class="stat-label">Questions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Mock Tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Core Subjects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Instant</div>
+        <div class="stat-label">Score Evaluation</div>
+      </div>
+    </section>
+
+    <section style="margin: 4rem 0;">
+      <h2 class="section-title">Why Practice With Us?</h2>
+      <p class="section-subtitle">Designed strictly according to the latest GATE Physics syllabus and exam layout.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h3 class="card-title">GATE-level Questions</h3>
+          <p class="card-desc">Curated conceptual MCQs matched with GATE difficulty and standard marking schemes.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">Subject-wise Practice</h3>
+          <p class="card-desc">Target specific weak areas subject-by-subject before taking full-length tests.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h3 class="card-title">Detailed Results</h3>
+          <p class="card-desc">Get instant statistical feedback, breakdown of correct/wrong answers, and accuracy stats.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3 class="card-title">Mobile Friendly</h3>
+          <p class="card-desc">Practice seamless tests on mobile phones, tablets, or desktops without dynamic scaling bugs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin: 4rem 0;">
+      <h2 class="section-title">Popular Subjects</h2>
+      <p class="section-subtitle">Select a subject to begin targeted topic mock tests.</p>
+      <div class="card-grid" id="homepage-subjects">
+        </div>
+    </section>
+
+    <section class="cta-banner">
+      <h2>Ready to test your prep standard?</h2>
+      <p>Attempt real-time timed tests with instant score reports.</p>
+      <a href="gate-mock/index.html" class="btn btn-accent">Enter Mock Test Centre →</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">⚛️ GATE <span>Physics '27</span></div>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Free high-quality practice engine for GATE Physics aspirants across India.</p>
+        </div>
+        <div>
+          <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+          <p><a href="gate-mock/index.html" style="color: var(--text-muted);">Mock Tests</a></p>
+          <p><a href="pyq.html" style="color: var(--text-muted);">Previous Year Papers</a></p>
+          <p><a href="resources.html" style="color: var(--text-muted);">Study Material</a></p>
+        </div>
+        <div>
+          <h4 style="margin-bottom: 1rem;">Disclaimer</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">This site is an open learning project and is not officially affiliated with IIT or GATE Organizing Institutes.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2027 GATE Physics Prep Engine. Designed for GitHub Pages.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="tests.js"></script>
+  <script>
+    // Navigation Hamburger Toggle
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('active');
+    });
+
+    // Populate Popular Subjects on Homepage
+    const container = document.getElementById('homepage-subjects');
+    if (window.TEST_CATALOG && window.TEST_CATALOG.subjects) {
+      window.TEST_CATALOG.subjects.forEach(sub => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-icon">${sub.icon}</div>
+          <h3 class="card-title">${sub.name}</h3>
+          <p class="card-desc">${sub.description}</p>
+          <a href="gate-mock/subject.html?subject=${sub.id}" class="btn btn-secondary" style="width: 100%;">View Tests →</a>
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
