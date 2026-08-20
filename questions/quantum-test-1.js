@@ -1,39 +1,31 @@
 window.MOCK = {
-  "title": "Quantum Test 1",
-  "subject": "Quantum",
-  "questions": [
+  title: "Quantum Mechanics Mock Test 1",
+  subject: "Quantum Mechanics",
+  duration: 30,
+  questions: [
     {
-      "q": "For a particle in a one-dimensional infinite potential well of width L, the ground-state energy is proportional to:",
-      "o": [
-        "L",
-        "1/L",
-        "L²",
-        "1/L²"
+      q: "What is the quantum mechanical commutator bracket $[x, p_x]$?",
+      o: [
+        "0",
+        "$i\\hbar$",
+        "$-i\\hbar$",
+        "$\\hbar$"
       ],
-      "a": 3,
-      "m": 1
+      a: 1,
+      m: 1,
+      negative: 0.33
     },
     {
-      "q": "The expectation value of position for a stationary state in a symmetric infinite well centered at the origin is:",
-      "o": [
-        "L",
-        "0",
-        "L/2",
-        "∞"
+      q: "For a particle in a 1D infinite potential well of length $L$, what is the ground state energy expression?",
+      o: [
+        "$\\frac{\\pi^2 \\hbar^2}{2mL^2}$",
+        "$\\frac{\\pi^2 \\hbar^2}{mL^2}$",
+        "$\\frac{2\\pi^2 \\hbar^2}{mL^2}$",
+        "0"
       ],
-      "a": 1,
-      "m": 1
-    },
-    {
-      "q": "The commutator [x,p] is:",
-      "o": [
-        "0",
-        "iℏ",
-        "-iℏ",
-        "ℏ"
-      ],
-      "a": 1,
-      "m": 1
+      a: 0,
+      m: 2,
+      negative: 0.66
     }
   ]
 };
