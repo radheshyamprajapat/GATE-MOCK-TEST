@@ -1,6 +1,46 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mock Test</title><link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="exam.css"></head><body>
-<header class="examtop"><div class="examtopin"><div><b id="testTitle">Loading...</b><div class="muted" id="subjectName"></div></div><div class="timer" id="timer">30:00</div></div></header>
-<main class="examgrid"><section class="question"><div class="muted" id="qno"></div><h2 id="qtext"></h2><div id="options"></div><div class="controls"><button class="btn secondary" onclick="prev()">← Previous</button><button class="btn" onclick="next()">Next →</button></div><button class="btn" style="margin-top:14px;background:#15803d" onclick="finish()">Submit Test</button></section>
-<aside class="palette"><b>Question Palette</b><div id="palette" class="numbers"></div></aside></main>
-<script src="../tests.js"></script><script src="exam.js"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GATE Online CBT Test</title>
+  <link rel="stylesheet" href="exam.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <header class="exam-header">
+    <div class="exam-title" id="test-title">GATE Physics Mock Exam</div>
+    <div class="exam-timer" id="timer-display">--:--</div>
+    <button class="palette-btn" style="width:auto; padding: 0.5rem 1rem; background: var(--danger); color: white; border: none;" onclick="if(confirm('Submit test now?')) submitTest();">Submit Exam</button>
+  </header>
+
+  <main class="exam-container">
+    <section class="question-panel">
+      <div>
+        <div class="question-meta">
+          <span id="q-number">Question 1</span>
+          <span id="q-marks">Marks: +1 | -0.25</span>
+        </div>
+        <div class="question-text" id="q-text">Loading question text...</div>
+        <div class="options-list" id="options-container"></div>
+      </div>
+
+      <div class="exam-actions">
+        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="prevQuestion()">Previous</button>
+        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem; background: var(--primary); color: white;" onclick="nextQuestion()">Next</button>
+        <button class="palette-btn" style="width: auto; padding: 0.5rem 1rem;" onclick="clearResponse()">Clear Response</button>
+      </div>
+    </section>
+
+    <aside class="palette-panel">
+      <h3>Question Palette</h3>
+      <div class="palette-grid" id="palette-grid"></div>
+    </aside>
+  </main>
+
+  <script src="../tests.js"></script>
+  <script src="exam.js"></script>
+</body>
+</html>
