@@ -1,6 +1,7 @@
-/* CBT EXAM ENGINE WITH MATHJAX RE-RENDER */
+/* OFFICIAL GATE/NTA CBT ENGINE */
 let currentQuestionIndex = 0;
-let userAnswers = {};
+let userAnswers = {};      // Stores selected option index
+let questionStatus = {};   // 'not-visited', 'not-answered', 'answered', 'marked', 'ans-marked'
 let timerInterval = null;
 let totalTimeSeconds = 0;
 
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const testId = urlParams.get("test");
 
   if (!testId || !window.TEST_CATALOG) {
-    alert("Invalid test context.");
+    alert("Invalid test request.");
     window.location.href = "index.html";
     return;
   }
@@ -22,30 +23,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (!testEntry) {
-    alert("Test requested does not exist.");
+    alert("Test does not exist.");
     window.location.href = "index.html";
     return;
   }
 
   const script = document.createElement("script");
   script.src = "../" + testEntry.file;
-  script.onload = () => {
-    initExam();
-  };
-  script.onerror = () => {
-    alert("Failed to load test questions data file.");
-  };
+  script.onload = () => initExam();
   document.head.appendChild(script);
 });
 
 function initExam() {
-  if (!window.MOCK || !window.MOCK.questions) {
-    alert("Corrupted question structure.");
-    return;
-  }
+  if (!window.MOCK || !window.MOCK.questions) return;
 
   document.getElementById("test-title").textContent = window.MOCK.title;
-  totalTimeSeconds = (window.MOCK.duration || 30) * 60;
+  totalTimeSeconds = (window.MOCK.duration || 45) * 60;
+
+  // Initialize all questions as not-visited
+  window.MOCK.questions.forEach((_, idx) => {
+    questionStatus[idx] = "not-visited";
+  });
+
   startTimer();
   renderPalette();
   loadQuestion(0);
@@ -61,7 +60,7 @@ function startTimer() {
 
     if (totalTimeSeconds <= 0) {
       clearInterval(timerInterval);
-      alert("Time is up! Submitting test automatically.");
+      alert("Time is up! Submitting exam.");
       submitTest();
     }
   }, 1000);
@@ -69,10 +68,15 @@ function startTimer() {
 
 function loadQuestion(index) {
   currentQuestionIndex = index;
-  const qData = window.MOCK.questions[index];
 
-  document.getElementById("q-number").textContent = `Question ${index + 1} of ${window.MOCK.questions.length}`;
-  document.getElementById("q-marks").textContent = `Marks: +${qData.m || 1} | -${qData.negative || 0.25}`;
+  // Set status to not-answered if first visit
+  if (questionStatus[index] === "not-visited") {
+    questionStatus[index] = "not-answered";
+  }
+
+  const qData = window.MOCK.questions[index];
+  document.getElementById("q-number").textContent = `Question No. ${index + 1}`;
+  document.getElementById("q-marks").textContent = `Marks: +${qData.m || 1} | -${qData.negative || 0.33}`;
   document.getElementById("q-text").innerHTML = qData.q;
 
   const optionsContainer = document.getElementById("options-container");
@@ -80,37 +84,57 @@ function loadQuestion(index) {
 
   qData.o.forEach((optText, oIdx) => {
     const item = document.createElement("div");
-    item.className = `option-item ${userAnswers[index] === oIdx ? 'selected' : ''}`;
+    item.className = `cbt-opt-item ${userAnswers[index] === oIdx ? 'selected' : ''}`;
     item.onclick = () => selectOption(oIdx);
 
     item.innerHTML = `
       <input type="radio" name="opt" ${userAnswers[index] === oIdx ? 'checked' : ''}>
-      <span><strong>${String.fromCharCode(65 + oIdx)}.</strong> ${optText}</span>
+      <span><strong>(${String.fromCharCode(65 + oIdx)})</strong> ${optText}</span>
     `;
     optionsContainer.appendChild(item);
   });
 
-  updatePaletteHighlights();
+  updatePalette();
 
-  // Re-render LaTeX formatting dynamically
   if (window.MathJax && window.MathJax.typesetPromise) {
-    MathJax.typesetPromise([document.getElementById("q-text"), optionsContainer]).catch((err) => console.log(err));
+    MathJax.typesetPromise([document.getElementById("q-text"), optionsContainer]).catch((e) => console.log(e));
   }
 }
 
-function selectOption(optIndex) {
-  userAnswers[currentQuestionIndex] = optIndex;
+function selectOption(optIdx) {
+  userAnswers[currentQuestionIndex] = optIdx;
   loadQuestion(currentQuestionIndex);
 }
 
 function clearResponse() {
   delete userAnswers[currentQuestionIndex];
+  questionStatus[currentQuestionIndex] = "not-answered";
   loadQuestion(currentQuestionIndex);
+}
+
+function saveAndNext() {
+  if (userAnswers.hasOwnProperty(currentQuestionIndex)) {
+    questionStatus[currentQuestionIndex] = "answered";
+  } else {
+    questionStatus[currentQuestionIndex] = "not-answered";
+  }
+  nextQuestion();
+}
+
+function markForReview() {
+  if (userAnswers.hasOwnProperty(currentQuestionIndex)) {
+    questionStatus[currentQuestionIndex] = "ans-marked";
+  } else {
+    questionStatus[currentQuestionIndex] = "marked";
+  }
+  nextQuestion();
 }
 
 function nextQuestion() {
   if (currentQuestionIndex < window.MOCK.questions.length - 1) {
     loadQuestion(currentQuestionIndex + 1);
+  } else {
+    updatePalette();
   }
 }
 
@@ -123,65 +147,71 @@ function prevQuestion() {
 function renderPalette() {
   const grid = document.getElementById("palette-grid");
   grid.innerHTML = "";
+
   window.MOCK.questions.forEach((_, idx) => {
     const btn = document.createElement("button");
-    btn.className = "palette-btn unanswered";
-    btn.id = `palette-btn-${idx}`;
+    btn.id = `p-btn-${idx}`;
     btn.textContent = idx + 1;
     btn.onclick = () => loadQuestion(idx);
     grid.appendChild(btn);
   });
 }
 
-function updatePaletteHighlights() {
+function updatePalette() {
+  let counts = { 'not-visited': 0, 'not-answered': 0, 'answered': 0, 'marked': 0, 'ans-marked': 0 };
+
   window.MOCK.questions.forEach((_, idx) => {
-    const btn = document.getElementById(`palette-btn-${idx}`);
-    btn.className = "palette-btn";
-    if (userAnswers.hasOwnProperty(idx)) {
-      btn.classList.add("answered");
-    } else {
-      btn.classList.add("unanswered");
-    }
+    const btn = document.getElementById(`p-btn-${idx}`);
+    const st = questionStatus[idx];
+
+    counts[st]++;
+    btn.className = `p-btn ${st}`;
+
     if (idx === currentQuestionIndex) {
-      btn.classList.add("current");
+      btn.classList.add("active-q");
     }
   });
+
+  document.getElementById("count-not-visited").textContent = counts["not-visited"];
+  document.getElementById("count-not-answered").textContent = counts["not-answered"];
+  document.getElementById("count-answered").textContent = counts["answered"];
+  document.getElementById("count-marked").textContent = counts["marked"];
+  document.getElementById("count-ans-marked").textContent = counts["ans-marked"];
 }
 
 function submitTest() {
   clearInterval(timerInterval);
 
-  let score = 0;
-  let correct = 0;
-  let wrong = 0;
-  let skipped = 0;
+  let score = 0, correct = 0, wrong = 0, skipped = 0;
 
   window.MOCK.questions.forEach((q, idx) => {
-    if (!userAnswers.hasOwnProperty(idx)) {
-      skipped++;
-    } else if (userAnswers[idx] === q.a) {
-      correct++;
-      score += (q.m || 1);
+    const st = questionStatus[idx];
+    // In GATE, both 'answered' and 'ans-marked' are evaluated
+    if ((st === "answered" || st === "ans-marked") && userAnswers.hasOwnProperty(idx)) {
+      if (userAnswers[idx] === q.a) {
+        correct++;
+        score += (q.m || 1);
+      } else {
+        wrong++;
+        score -= (q.negative || 0.33);
+      }
     } else {
-      wrong++;
-      score -= (q.negative || 0.25);
+      skipped++;
     }
   });
 
-  const maxPossibleMarks = window.MOCK.questions.reduce((acc, curr) => acc + (curr.m || 1), 0);
+  const maxMarks = window.MOCK.questions.reduce((a, c) => a + (c.m || 1), 0);
   const attempted = correct + wrong;
-  const accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : 0;
-  const percentage = ((score / maxPossibleMarks) * 100).toFixed(1);
 
   const resultData = {
     testTitle: window.MOCK.title,
     score: score.toFixed(2),
-    maxMarks: maxPossibleMarks,
+    maxMarks,
     correct,
     wrong,
     skipped,
-    accuracy,
-    percentage
+    accuracy: attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : 0,
+    percentage: ((score / maxMarks) * 100).toFixed(1)
   };
 
   sessionStorage.setItem("MOCK_RESULT", JSON.stringify(resultData));
