@@ -1,6 +1,79 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Result</title><link rel="stylesheet" href="../style.css"></head><body>
-<main class="result"><div class="card"><span class="badge">Test Result</span><h1 id="title">Result</h1><div class="cards">
-<div class="card"><h3 id="score"></h3><p class="muted">Score</p></div><div class="card"><h3 id="correct"></h3><p class="muted">Correct</p></div><div class="card"><h3 id="wrong"></h3><p class="muted">Wrong</p></div><div class="card"><h3 id="skip"></h3><p class="muted">Skipped</p></div>
-</div><a class="btn" href="index.html">Back to Mock Tests</a></div></main>
-<script>const r=JSON.parse(localStorage.getItem('gateLastResult')||'{}');document.getElementById('title').textContent=r.title||'Result';document.getElementById('score').textContent=(r.score??0).toFixed(2);document.getElementById('correct').textContent=r.correct??0;document.getElementById('wrong').textContent=r.wrong??0;document.getElementById('skip').textContent=r.skip??0;</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Result Dashboard</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="logo">⚛️ GATE <span>Physics '27</span></a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card" style="max-width: 700px; margin: 2rem auto; text-align: center; padding: 2.5rem;">
+      <h1 class="section-title" id="res-title">Test Result</h1>
+      <div id="perf-msg" class="badge badge-primary" style="font-size: 1rem; margin: 1rem 0;">Evaluating...</div>
+
+      <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin: 1.5rem 0;" id="res-score">
+        0 / 0
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); margin: 2rem 0;">
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--success);" id="res-correct">0</div>
+          <div class="stat-label">Correct Answers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--danger);" id="res-wrong">0</div>
+          <div class="stat-label">Wrong Answers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--warning);" id="res-skipped">0</div>
+          <div class="stat-label">Skipped</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="res-accuracy">0%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn-secondary">Back to Mock Tests</a>
+        <button onclick="window.history.back()" class="btn btn-primary">Retry Test 🔄</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const dataRaw = sessionStorage.getItem("MOCK_RESULT");
+    if (!dataRaw) {
+      window.location.href = "index.html";
+    } else {
+      const res = JSON.parse(dataRaw);
+      document.getElementById("res-title").textContent = res.testTitle;
+      document.getElementById("res-score").textContent = `${res.score} / ${res.maxMarks}`;
+      document.getElementById("res-correct").textContent = res.correct;
+      document.getElementById("res-wrong").textContent = res.wrong;
+      document.getElementById("res-skipped").textContent = res.skipped;
+      document.getElementById("res-accuracy").textContent = `${res.accuracy}%`;
+
+      const msgBadge = document.getElementById("perf-msg");
+      const p = parseFloat(res.percentage);
+      if (p >= 75) {
+        msgBadge.textContent = "🌟 Excellent Performance!";
+        msgBadge.className = "badge badge-easy";
+      } else if (p >= 40) {
+        msgBadge.textContent = "👍 Good Performance - Keep Practicing";
+        msgBadge.className = "badge badge-medium";
+      } else {
+        msgBadge.textContent = "📖 More Practice Recommended";
+        msgBadge.className = "badge badge-hard";
+      }
+    }
+  </script>
+</body>
+</html>
