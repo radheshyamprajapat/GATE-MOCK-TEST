@@ -1,10 +1,70 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Subject Mocks</title><link rel="stylesheet" href="../style.css"></head><body>
-<header class="nav"><div class="container navin"><div class="logo">GATE Physics 2027</div><nav class="navlinks"><a href="index.html">Mock Tests</a></nav></div></header>
-<main class="container" style="padding:45px 20px"><a href="index.html">← All Subjects</a><h1 id="title">Tests</h1><div id="tests" class="list"></div></main>
-<script src="../tests.js"></script><script>
-const id=new URLSearchParams(location.search).get('subject'); const s=TEST_CATALOG.subjects.find(x=>x.id===id);
-if(!s){document.getElementById('title').textContent='Subject not found'}else{
-document.getElementById('title').textContent=s.icon+' '+s.name+' — Mock Tests';
-document.getElementById('tests').innerHTML=s.tests.length?s.tests.map((t,i)=>`<a class="card" href="mock-test.html?test=${t.id}"><h3>${t.name}</h3><p class="muted">Test ${i+1} • Click to start</p><span class="pill">Start Test →</span></a>`).join(''):'<div class="card"><h3>Coming soon</h3><p class="muted">Add a question file and one test entry in tests.js to activate this subject.</p></div>';
-}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subject Mock Tests - GATE Physics 2027</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="logo">⚛️ GATE <span>Physics '27</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="index.html" class="active">Mock Tests</a></li>
+        <li><a href="../pyq.html">PYQs</a></li>
+        <li><a href="../resources.html">Resources</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="index.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">← Back to Mock Centre</a>
+    <h1 class="section-title" id="subject-title" style="margin-top: 1rem;">Subject</h1>
+    <p class="section-subtitle">Choose your mock test to practice.</p>
+
+    <div class="card-grid" id="test-list-grid">
+      </div>
+  </main>
+
+  <script src="../tests.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const subId = urlParams.get('subject');
+    const container = document.getElementById('test-list-grid');
+    const title = document.getElementById('subject-title');
+
+    const subjectObj = window.TEST_CATALOG.subjects.find(s => s.id === subId);
+
+    if (subjectObj) {
+      title.textContent = subjectObj.icon + " " + subjectObj.name;
+      if (subjectObj.tests.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted);">No mock tests available in this module yet. Check back soon!</p>`;
+      } else {
+        subjectObj.tests.forEach((t) => {
+          let diffClass = "badge-medium";
+          if (t.difficulty === "Easy") diffClass = "badge-easy";
+          if (t.difficulty === "Hard") diffClass = "badge-hard";
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+              <span class="badge ${diffClass}">${t.difficulty}</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">${t.duration} mins</span>
+            </div>
+            <h3 class="card-title">${t.name}</h3>
+            <p class="card-desc">${t.questionsCount} Questions • ${t.marks} Marks</p>
+            <a href="mock-test.html?test=${t.id}" class="btn btn-primary" style="width: 100%;">Start Test</a>
+          `;
+          container.appendChild(card);
+        });
+      }
+    } else {
+      title.textContent = "Subject Not Found";
+    }
+  </script>
+</body>
+</html>
